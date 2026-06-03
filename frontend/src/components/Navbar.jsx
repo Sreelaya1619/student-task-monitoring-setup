@@ -11,69 +11,100 @@ import { useState } from "react";
 export default function Navbar({ darkMode, toggleDarkMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // NavLink className can be a function that receives { isActive }
   const linkClass = ({ isActive }) =>
-    `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+    `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
       isActive
-        ? "bg-blue-600 text-white"
-        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+        ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
+        : "text-gray-300 hover:bg-gray-800 hover:text-white"
     }`;
 
   return (
-    <nav className="bg-gray-900 shadow-lg">
+    <nav className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 shadow-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand / Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
-            <span className="text-white font-bold text-lg">
-              Student Task Manager
-            </span>
+
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-xl shadow-lg">
+              🎯
+            </div>
+
+            <div>
+              <h1 className="text-white font-bold text-lg">
+                  LAYA STUDENT TASK MANAGER
+              </h1>
+              <p className="text-xs text-gray-300">
+                Stay Organized
+              </p>
+            </div>
           </div>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-3">
             <NavLink to="/" end className={linkClass}>
               Dashboard
             </NavLink>
+
             <NavLink to="/tasks" className={linkClass}>
-              Task List
+              Tasks
             </NavLink>
+
             <NavLink to="/add" className={linkClass}>
               + Add Task
             </NavLink>
 
-            {/* Dark mode toggle button */}
             <button
               onClick={toggleDarkMode}
-              className="ml-2 p-2 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
-              title="Toggle dark mode"
+              className="ml-2 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition-all duration-300"
+              title="Toggle Theme"
             >
               {darkMode ? "☀️" : "🌙"}
             </button>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Button */}
           <button
-            className="md:hidden text-gray-300 hover:text-white p-2"
+            className="md:hidden text-white text-xl"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? "✕" : "☰"}
           </button>
         </div>
 
-        {/* Mobile dropdown menu */}
+        {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden pb-3 flex flex-col gap-1">
-            <NavLink to="/" end className={linkClass} onClick={() => setMenuOpen(false)}>
+          <div className="md:hidden py-3 flex flex-col gap-2 border-t border-gray-700">
+            <NavLink
+              to="/"
+              end
+              className={linkClass}
+              onClick={() => setMenuOpen(false)}
+            >
               Dashboard
             </NavLink>
-            <NavLink to="/tasks" className={linkClass} onClick={() => setMenuOpen(false)}>
-              Task List
+
+            <NavLink
+              to="/tasks"
+              className={linkClass}
+              onClick={() => setMenuOpen(false)}
+            >
+              Tasks
             </NavLink>
-            <NavLink to="/add" className={linkClass} onClick={() => setMenuOpen(false)}>
+
+            <NavLink
+              to="/add"
+              className={linkClass}
+              onClick={() => setMenuOpen(false)}
+            >
               + Add Task
             </NavLink>
+
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg bg-gray-800 text-white"
+            >
+              {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+            </button>
           </div>
         )}
       </div>

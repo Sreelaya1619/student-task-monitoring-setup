@@ -1,124 +1,184 @@
 // ============================================================
 // TASK CONTROLLER
 // Controllers handle the REQUEST → RESPONSE cycle.
-// They:
-//   1. Read data from the HTTP request (req)
-//   2. Call the Model to interact with the database
-//   3. Send back an HTTP response (res)
-// Controllers should NOT contain SQL — that belongs in the model.
 // ============================================================
 
 const { validationResult } = require("express-validator");
 const Task = require("../models/task");
 
-// Helper: send a consistent error response
-const sendError = (res, status, message) =>
-  res.status(status).json({ success: false, message });
+// Helper function
+const sendError = (res, status, message) => {
+  return res.status(status).json({
+    success: false,
+    message,
+  });
+};
 
 // -------------------------------------------------------
-// GET /tasks — Fetch all tasks
+// GET ALL TASKS
 // -------------------------------------------------------
 exports.getAllTasks = (req, res) => {
   try {
     const tasks = Task.getAll();
-    res.json({ success: true, data: tasks });
+
+    res.json({
+      success: true,
+      data: tasks,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to fetch tasks.");
   }
 };
 
 // -------------------------------------------------------
-// GET /tasks/:id — Fetch a single task by its ID
+// GET TASK BY ID
 // -------------------------------------------------------
 exports.getTaskById = (req, res) => {
   try {
     const task = Task.getById(req.params.id);
-    if (!task) return sendError(res, 404, "Task not found.");
-    res.json({ success: true, data: task });
+
+    if (!task) {
+      return sendError(res, 404, "Task not found.");
+    }
+
+    res.json({
+      success: true,
+      data: task,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to fetch task.");
   }
 };
 
 // -------------------------------------------------------
-// POST /tasks — Create a new task
-// validationResult checks if express-validator found errors
+// CREATE TASK
 // -------------------------------------------------------
 exports.createTask = (req, res) => {
-  // Check for validation errors set by the middleware
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, errors: errors.array() });
+    return res.status(422).json({
+      success: false,
+      errors: errors.array(),
+    });
   }
 
   try {
-    const { title, description } = req.body;
-    const task = Task.create({ title, description });
-    // 201 = "Created" — use this status code for new resources
-    res.status(201).json({ success: true, data: task });
+    const {
+      title,
+      description,
+      priority,
+    } = req.body;
+
+    const task = Task.create({
+      title,
+      description,
+      priority,
+    });
+
+    res.status(201).json({
+      success: true,
+      data: task,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to create task.");
   }
 };
 
 // -------------------------------------------------------
-// PUT /tasks/:id — Update title and description of a task
+// UPDATE TASK
 // -------------------------------------------------------
 exports.updateTask = (req, res) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    return res.status(422).json({ success: false, errors: errors.array() });
+    return res.status(422).json({
+      success: false,
+      errors: errors.array(),
+    });
   }
 
   try {
-    const existing = Task.getById(req.params.id);
-    if (!existing) return sendError(res, 404, "Task not found.");
+    const existingTask = Task.getById(req.params.id);
 
-    const { title, description } = req.body;
-    const updated = Task.update(req.params.id, { title, description });
-    res.json({ success: true, data: updated });
+    if (!existingTask) {
+      return sendError(res, 404, "Task not found.");
+    }
+
+    const {
+      title,
+      description,
+      priority,
+    } = req.body;
+
+    const updatedTask = Task.update(req.params.id, {
+      title,
+      description,
+      priority,
+    });
+
+    res.json({
+      success: true,
+      data: updatedTask,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to update task.");
   }
 };
 
 // -------------------------------------------------------
-// PATCH /tasks/:id/complete — Mark a task as completed
-// PATCH is used for partial updates (we only change status)
+// MARK TASK AS COMPLETED
 // -------------------------------------------------------
 exports.completeTask = (req, res) => {
   try {
-    const existing = Task.getById(req.params.id);
-    if (!existing) return sendError(res, 404, "Task not found.");
+    const existingTask = Task.getById(req.params.id);
 
-    const updated = Task.complete(req.params.id);
-    res.json({ success: true, data: updated });
+    if (!existingTask) {
+      return sendError(res, 404, "Task not found.");
+    }
+
+    const updatedTask = Task.complete(req.params.id);
+
+    res.json({
+      success: true,
+      data: updatedTask,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to complete task.");
   }
 };
 
 // -------------------------------------------------------
-// DELETE /tasks/:id — Delete a task permanently
+// DELETE TASK
 // -------------------------------------------------------
 exports.deleteTask = (req, res) => {
   try {
     const deleted = Task.delete(req.params.id);
-    if (!deleted) return sendError(res, 404, "Task not found.");
-    // 200 with a message — the resource no longer exists
-    res.json({ success: true, message: "Task deleted successfully." });
+
+    if (!deleted) {
+      return sendError(res, 404, "Task not found.");
+    }
+
+    res.json({
+      success: true,
+      message: "Task deleted successfully.",
+    });
   } catch (err) {
     sendError(res, 500, "Failed to delete task.");
   }
 };
 
 // -------------------------------------------------------
-// GET /tasks/stats — Dashboard summary counts
+// TASK STATISTICS
 // -------------------------------------------------------
 exports.getStats = (req, res) => {
   try {
     const stats = Task.getStats();
-    res.json({ success: true, data: stats });
+
+    res.json({
+      success: true,
+      data: stats,
+    });
   } catch (err) {
     sendError(res, 500, "Failed to fetch stats.");
   }

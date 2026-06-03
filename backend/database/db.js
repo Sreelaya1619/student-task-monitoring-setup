@@ -31,13 +31,14 @@ db.exec("PRAGMA journal_mode = WAL");
 // guard means it only creates the table the very first time.
 // -------------------------------------------------------
 db.exec(`
-  CREATE TABLE IF NOT EXISTS tasks (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT    NOT NULL,
-    description TEXT    DEFAULT '',
-    status      TEXT    NOT NULL DEFAULT 'pending',
-    createdAt   DATETIME DEFAULT (datetime('now'))
-  )
+CREATE TABLE IF NOT EXISTS tasks (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  title       TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  status      TEXT NOT NULL DEFAULT 'pending',
+  priority    TEXT DEFAULT 'Medium',
+  createdAt   DATETIME DEFAULT (datetime('now'))
+)
 `);
 
 console.log("✅ Database connected and tasks table ready.");
