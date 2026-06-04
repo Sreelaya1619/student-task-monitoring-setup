@@ -15,7 +15,7 @@ import axios from "axios";
 // Create an axios instance with shared config.
 // Every function below uses this instance.
 const api = axios.create({
-  baseURL: "/api", // Vite proxy forwards this to http://localhost:5000/api
+  baseURL: "http://localhost:3001/api",
   headers: { "Content-Type": "application/json" },
 });
 
