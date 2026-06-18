@@ -1,113 +1,112 @@
-📊 Student Task Monitoring Setup (DevOps Project)
+# StudentTask DevOps Environment
 
-A full-stack Student Task Management application integrated with DevOps monitoring tools including:
+Welcome to the **StudentTask-DevOps** workspace. This repository configures and deploys a multi-tier application architecture complete with a centralized logging stack (ELK) and an enterprise monitoring system (Prometheus + Grafana) running entirely inside Docker.
 
-🐳 Docker (Containerization)
-📈 Prometheus (Metrics collection)
-📊 Grafana (Visualization dashboards)
-📜 ELK Stack (Logging: Elasticsearch, Logstash, Kibana)
-🚀 Project Overview
+---
 
-This project demonstrates a complete DevOps monitoring pipeline for a student task management system.
+## 🏗️ Architecture Overview
 
-It helps to:
+The containerized environment is split into three main layers:
+1. **Core Applications:** The functional user interfaces and business logic endpoints.
+2. **Centralized Logging (ELK Stack):** Automatically collects, formats, and stores logs for debugging.
+3. **Metrics & Monitoring Stack:** Tracks performance metrics, resource consumption, and uptime.
 
-Track application performance
-Monitor system health
-Collect and visualize logs
-Understand real-world DevOps observability practices
-🏗️ Architecture
-Frontend  → Backend API → Database
-                ↓
-        Prometheus (Metrics)
-                ↓
-           Grafana (Dashboards)
+---
 
-Logs → Logstash → Elasticsearch → Kibana
-🧰 Tech Stack
-Application
-Node.js / Express (Backend)
-MongoDB / MySQL (Database)
-React / HTML (Frontend)
-DevOps Tools
-Docker & Docker Compose
-Prometheus
-Grafana
-ELK Stack
-📦 Project Structure
-StudentTask-DevOps/
+## 🚦 Port Mapping & Local Access URLs
+
+Once all containers are running, you can access individual services in your browser using the local endpoints below:
+
+### 🌐 Core Application Tier
+* **Frontend Application:** [http://localhost:3000](http://localhost:3000) (Maps port `3000` to internal container port `80`)
+* **Backend API Service:** [http://localhost:3001](http://localhost:3001) (Maps port `3001` to internal container port `3001`)
+* **Streamlit Calculator:** [http://localhost:8501](http://localhost:8501) (Also exposes API/communication on port `8000`)
+
+### 📊 Log Management (ELK) Tier
+* **Kibana (Log Visualization UI):** [http://localhost:5601](http://localhost:5601) (Maps host port `5601`)
+* **Elasticsearch (Log Database Engine):** [http://localhost:9200](http://localhost:9200) (Maps host port `9200`)
+* **Logstash (Log Processing Pipeline):** *Internal Route* on port `5044` (Receives ingested data from Filebeat agents)
+* **Filebeat (Log Shipper Agent):** *Internal Service* (No public port exposed; runs quietly to harvest container log files)
+
+### 📈 Metrics Monitoring Tier
+* **Grafana (Metrics Dashboards):** [http://localhost:3002](http://localhost:3002) (Maps host port `3002` to internal container port `3000`)
+* **Prometheus (Time-Series Metrics DB):** [http://localhost:9090](http://localhost:9090) (Maps host port `9090`)
+
+---
+
+## 🔄 Data, Log & Metrics Pipelines
+
+### 1. Log Ingestion Pipeline (ELK)
+
+```
+
+[ Frontend / Backend / Calculator ]
 │
-├── backend/
-│   ├── src/
-│   ├── Dockerfile
-│   └── package.json
+▼ (Generates console logs to standard out)
+[ Filebeat ] (Harvests raw text files from Docker hosts)
 │
-├── frontend/
-│   ├── src/
-│   ├── Dockerfile
-│   └── package.json
+▼ (Sends log events via JSON)
+[ Logstash ] (Parses, filters, and structures the text fields)
 │
-├── monitoring/
-│   ├── prometheus.yml
-│   ├── grafana/
-│   └── elk/
+▼
+[ Elasticsearch ] (Stores indexes for high-speed search queries)
 │
-├── docker-compose.yml
-└── README.md
-⚙️ Setup Instructions
-1️⃣ Clone Repository
-git clone https://github.com/Sreelaya1619/student-task-monitoring-setup.git
-cd student-task-monitoring-setup
-2️⃣ Build and Run Containers
-docker-compose up --build
-3️⃣ Access Services
-Service	URL
-Frontend	http://localhost:3000
-Backend API	http://localhost:5000
-Prometheus	http://localhost:9090
-Grafana	http://localhost:3001
-Kibana	http://localhost:5601
-📊 Monitoring Features
-Prometheus
-CPU usage tracking
-Memory usage metrics
-API response time monitoring
-Grafana
-Real-time dashboards
-System performance graphs
-Container-level monitoring
-ELK Stack
-Centralized log collection
-Log filtering and search
-Error tracking and debugging
-🐳 Docker Support
+▼
+[ Kibana ] (Queries Elasticsearch to display logs graphically)
 
-All services are containerized using Docker.
+```
 
-Run everything with:
+### 2. Metrics Scraping Pipeline
 
-docker-compose up -d
+```
 
-Stop services:
+[ Prometheus ] ───► (Scrapes performance targets at periodic intervals) ───► [ Containers ]
+│
+▼ (Pulls metrics database query entries)
+[ Grafana ] (Populates customizable data visualization graphs)
 
-docker-compose down
-📌 Key Learnings
-Docker container orchestration
-Observability in distributed systems
-Metrics vs Logs vs Traces
-DevOps monitoring pipeline design
-Real-world system debugging
-👨‍💻 Author
+```
 
-Sreelaya1619
+---
 
-GitHub: https://github.com/Sreelaya1619
+## 🚀 Common DevOps Management Commands
 
-⭐ Future Improvements
-Kubernetes deployment
-CI/CD with GitHub Actions
-Alerting with Prometheus Alertmanager
-Security scanning integration
-📜 License
+Run these commands inside your terminal from the `~/StudentTask-DevOps` workspace:
 
-This project is for educational and learning purposes.
+### Verify Status of All 9 Containers
+To confirm everything is operating correctly:
+```bash
+docker ps
+
+```
+
+### Stop the Environment Safely
+
+To halt the services without dropping database state or volumes:
+
+```bash
+docker compose down
+
+```
+
+### Start / Restart Environment in Background
+
+To boot all services back up at once in detached mode:
+
+```bash
+docker compose up -d
+
+```
+
+### Live Stream Service Logs
+
+To debug a specific running microservice environment natively (e.g., the backend API):
+
+```bash
+docker logs -f student-task-backend
+
+```
+
+```
+
+```
