@@ -1,175 +1,113 @@
-# Student Task Manager
+📊 Student Task Monitoring Setup (DevOps Project)
 
-A beginner-friendly full-stack web application demonstrating React, Node.js, Express, and SQLite working together.
+A full-stack Student Task Management application integrated with DevOps monitoring tools including:
 
----
+🐳 Docker (Containerization)
+📈 Prometheus (Metrics collection)
+📊 Grafana (Visualization dashboards)
+📜 ELK Stack (Logging: Elasticsearch, Logstash, Kibana)
+🚀 Project Overview
 
-## Tech Stack
+This project demonstrates a complete DevOps monitoring pipeline for a student task management system.
 
-| Layer    | Technology                                   |
-|----------|----------------------------------------------|
-| Frontend | React 18, Vite, Tailwind CSS, React Router   |
-| Backend  | Node.js 26, Express.js, express-validator    |
-| Database | SQLite via built-in `node:sqlite` module     |
+It helps to:
 
----
+Track application performance
+Monitor system health
+Collect and visualize logs
+Understand real-world DevOps observability practices
+🏗️ Architecture
+Frontend  → Backend API → Database
+                ↓
+        Prometheus (Metrics)
+                ↓
+           Grafana (Dashboards)
 
-## Features
-
-- Add, view, edit, and delete tasks
-- Mark tasks as completed
-- Dashboard with total / completed / pending counts + progress bar
-- Search tasks by keyword
-- Filter by status (All / Pending / Completed)
-- Pagination (8 tasks per page)
-- Dark mode toggle
-
----
-
-## Project Structure
-
-```
-Instaautomation/
+Logs → Logstash → Elasticsearch → Kibana
+🧰 Tech Stack
+Application
+Node.js / Express (Backend)
+MongoDB / MySQL (Database)
+React / HTML (Frontend)
+DevOps Tools
+Docker & Docker Compose
+Prometheus
+Grafana
+ELK Stack
+📦 Project Structure
+StudentTask-DevOps/
+│
 ├── backend/
-│   ├── database/
-│   │   └── db.js            ← SQLite connection & table creation
-│   ├── models/
-│   │   └── task.js          ← SQL queries (CRUD operations)
-│   ├── controllers/
-│   │   └── taskController.js ← Request/response handlers
-│   ├── routes/
-│   │   └── taskRoutes.js    ← URL path → controller mapping
-│   └── server.js            ← Express app entry point
+│   ├── src/
+│   ├── Dockerfile
+│   └── package.json
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── services/
-│   │   │   └── api.js       ← All axios HTTP calls
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx   ← Navigation bar
-│   │   │   ├── TaskForm.jsx ← Reusable add/edit form
-│   │   │   └── TaskTable.jsx ← Task list table
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx ← Stats overview
-│   │   │   ├── TaskList.jsx  ← All tasks with search/filter
-│   │   │   └── AddTask.jsx   ← Create new task
-│   │   ├── App.jsx          ← Router setup & dark mode state
-│   │   ├── main.jsx         ← React root mount
-│   │   └── index.css        ← Tailwind imports
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── tailwind.config.js
+│   ├── Dockerfile
 │   └── package.json
 │
+├── monitoring/
+│   ├── prometheus.yml
+│   ├── grafana/
+│   └── elk/
+│
+├── docker-compose.yml
 └── README.md
-```
+⚙️ Setup Instructions
+1️⃣ Clone Repository
+git clone https://github.com/Sreelaya1619/student-task-monitoring-setup.git
+cd student-task-monitoring-setup
+2️⃣ Build and Run Containers
+docker-compose up --build
+3️⃣ Access Services
+Service	URL
+Frontend	http://localhost:3000
+Backend API	http://localhost:5000
+Prometheus	http://localhost:9090
+Grafana	http://localhost:3001
+Kibana	http://localhost:5601
+📊 Monitoring Features
+Prometheus
+CPU usage tracking
+Memory usage metrics
+API response time monitoring
+Grafana
+Real-time dashboards
+System performance graphs
+Container-level monitoring
+ELK Stack
+Centralized log collection
+Log filtering and search
+Error tracking and debugging
+🐳 Docker Support
 
----
+All services are containerized using Docker.
 
-## Prerequisites
+Run everything with:
 
-- **Node.js 22+** (Node 26 recommended — uses built-in `node:sqlite`)
-- npm
+docker-compose up -d
 
----
+Stop services:
 
-## Quick Start
+docker-compose down
+📌 Key Learnings
+Docker container orchestration
+Observability in distributed systems
+Metrics vs Logs vs Traces
+DevOps monitoring pipeline design
+Real-world system debugging
+👨‍💻 Author
 
-### 1. Start the Backend
+Sreelaya1619
 
-```bash
-cd backend
-npm install
-npm start
-```
+GitHub: https://github.com/Sreelaya1619
 
-The API will be available at: `http://localhost:3001`
+⭐ Future Improvements
+Kubernetes deployment
+CI/CD with GitHub Actions
+Alerting with Prometheus Alertmanager
+Security scanning integration
+📜 License
 
-### 2. Start the Frontend (new terminal)
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The app will open at: `http://localhost:3000`
-
-> The Vite dev server proxies `/api` requests to `http://localhost:3001` automatically, so no CORS issues.
-
----
-
-## REST API Reference
-
-| Method | Endpoint                  | Description           |
-|--------|---------------------------|-----------------------|
-| GET    | `/api/tasks`              | Get all tasks         |
-| GET    | `/api/tasks/stats`        | Get dashboard counts  |
-| GET    | `/api/tasks/:id`          | Get one task          |
-| POST   | `/api/tasks`              | Create a task         |
-| PUT    | `/api/tasks/:id`          | Update title/desc     |
-| PATCH  | `/api/tasks/:id/complete` | Mark as completed     |
-| DELETE | `/api/tasks/:id`          | Delete a task         |
-
-### Example: Create a Task
-
-```bash
-curl -X POST http://localhost:3001/api/tasks \
-  -H "Content-Type: application/json" \
-  -d '{"title": "Study for exam", "description": "Chapters 1-5"}'
-```
-
----
-
-## How the Full Stack Works
-
-```
-Browser (React)
-    |
-    |  HTTP Request (axios)
-    ↓
-Express Server (Node.js)
-    |
-    |  Route → Controller → Model
-    ↓
-SQLite Database (node:sqlite)
-    |
-    |  SQL Query Result
-    ↓
-Express → JSON Response
-    |
-    ↓
-React → Updates UI State → Re-renders
-```
-
-### Learning Concepts
-
-| Concept            | Where to look                             |
-|--------------------|-------------------------------------------|
-| React useState     | `TaskList.jsx`, `TaskForm.jsx`            |
-| React useEffect    | `Dashboard.jsx`, `TaskList.jsx`           |
-| React Router       | `App.jsx`, `Navbar.jsx`                   |
-| Axios API calls    | `services/api.js`                         |
-| Express routing    | `routes/taskRoutes.js`                    |
-| Validation middleware | `routes/taskRoutes.js`, `controllers/` |
-| SQL CRUD           | `models/task.js`                          |
-| Database setup     | `database/db.js`                          |
-
----
-
-## Development Scripts
-
-### Backend
-
-| Command       | Description                     |
-|---------------|---------------------------------|
-| `npm start`   | Start server (production)       |
-| `npm run dev` | Start with nodemon (auto-reload)|
-
-### Frontend
-
-| Command          | Description                       |
-|------------------|-----------------------------------|
-| `npm run dev`    | Start Vite dev server (port 3000) |
-| `npm run build`  | Build for production              |
-| `npm run preview`| Preview production build          |
+This project is for educational and learning purposes.
