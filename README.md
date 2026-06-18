@@ -7,7 +7,7 @@ Welcome to the **StudentTask-DevOps** workspace. This repository configures and 
 ## 🏗️ Architecture Overview
 
 The containerized environment is split into three main layers:
-1. **Core Applications:** The functional user interfaces and business logic endpoints.
+1. **Core Applications:** The functional user interfaces and backend business logic endpoints.
 2. **Centralized Logging (ELK Stack):** Automatically collects, formats, and stores logs for debugging.
 3. **Metrics & Monitoring Stack:** Tracks performance metrics, resource consumption, and uptime.
 
@@ -20,7 +20,6 @@ Once all containers are running, you can access individual services in your brow
 ### 🌐 Core Application Tier
 * **Frontend Application:** [http://localhost:3000](http://localhost:3000) (Maps port `3000` to internal container port `80`)
 * **Backend API Service:** [http://localhost:3001](http://localhost:3001) (Maps port `3001` to internal container port `3001`)
-* **Streamlit Calculator:** [http://localhost:8501](http://localhost:8501) (Also exposes API/communication on port `8000`)
 
 ### 📊 Log Management (ELK) Tier
 * **Kibana (Log Visualization UI):** [http://localhost:5601](http://localhost:5601) (Maps host port `5601`)
@@ -40,7 +39,7 @@ Once all containers are running, you can access individual services in your brow
 
 ```
 
-[ Frontend / Backend / Calculator ]
+[ Frontend / Backend Application ]
 │
 ▼ (Generates console logs to standard out)
 [ Filebeat ] (Harvests raw text files from Docker hosts)
@@ -73,7 +72,7 @@ Once all containers are running, you can access individual services in your brow
 
 Run these commands inside your terminal from the `~/StudentTask-DevOps` workspace:
 
-### Verify Status of All 9 Containers
+### Verify Status of All Containers
 To confirm everything is operating correctly:
 ```bash
 docker ps
