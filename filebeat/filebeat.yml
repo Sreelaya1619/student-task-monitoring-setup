@@ -1,0 +1,16 @@
+filebeat.inputs:
+
+- type: filestream
+
+  id: studentlogs
+
+  enabled: true
+
+  paths:
+    - /logs/*.log
+
+output.logstash:
+
+  hosts: ["logstash:5044"]
+
+logging.level: info
